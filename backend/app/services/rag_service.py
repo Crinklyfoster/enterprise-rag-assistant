@@ -33,5 +33,13 @@ class RAGService:
         return {
             "question": question,
             "answer": answer,
-            "sources": len(retrieved_chunks)
+            "sources": [
+                {
+                    "chunk_id": chunk["metadata"]["chunk_id"],
+                    "document_id": chunk["metadata"]["document_id"],
+                    "score": chunk["distance"],
+                    "preview": chunk["text"][:200]
+                }
+                for chunk in retrieved_chunks
+            ]
         }

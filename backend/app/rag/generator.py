@@ -15,21 +15,24 @@ class Generator:
         question: str
     ):
         prompt = f"""
-You are a helpful assistant.
+        You are a helpful assistant.
 
-Answer the question using ONLY the provided context.
+        Use the provided context to answer the question.
 
-If the answer is not contained in the context, say:
-"I could not find that information in the document."
+        If the answer can be inferred from the context, provide a concise answer.
 
-Context:
-{context}
+        Only respond with:
+        "I could not find that information in the document."
+        when the context contains no relevant information at all.
 
-Question:
-{question}
+        Context:
+        {context}
 
-Answer:
-"""
+        Question:
+        {question}
+
+        Answer:
+        """
 
         response = ollama.chat(
             model=self.model_name,

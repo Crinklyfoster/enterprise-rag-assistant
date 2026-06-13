@@ -28,5 +28,6 @@ def chat(
 
     return ChatResponse(
         answer=result["answer"],
+        sources=result["sources"],
         document_id=request.document_id
     )

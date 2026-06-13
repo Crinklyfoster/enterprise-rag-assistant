@@ -17,3 +17,6 @@ backend/uploads/*
 
 # OS
 .DS_Store
+
+# ChromaDB
+chroma_db/
