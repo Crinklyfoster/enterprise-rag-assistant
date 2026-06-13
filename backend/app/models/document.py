@@ -30,7 +30,7 @@ class Document(Base):
 
     status = Column(
         String,
-        default="processing"
+        default="uploaded"
     )
 
     uploaded_at = Column(
