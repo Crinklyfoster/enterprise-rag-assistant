@@ -37,6 +37,7 @@ def get_document_by_id(
         .first()
     )
 
+
 def save_uploaded_file(file):
     upload_dir = Path("uploads")
 
@@ -48,3 +49,26 @@ def save_uploaded_file(file):
         buffer.write(file.file.read())
 
     return str(file_path), unique_filename
+
+
+def upload_document(
+    db: Session,
+    file
+):
+    file_path, filename = save_uploaded_file(file)
+
+    document = Document(
+        filename=filename,
+        file_path=file_path,
+        status="processing"
+    )
+
+    db.add(document)
+    db.commit()
+    db.refresh(document)
+
+    return {
+        "message": "File uploaded successfully",
+        "document_id": document.id,
+        "filename": document.filename
+    }

@@ -12,7 +12,6 @@ from app.database.db import get_db
 from app.schemas.document import DocumentCreate
 from app.schemas.document import DocumentResponse
 from app.services import document_service
-from app.models.document import Document
 
 router = APIRouter(
     prefix="/documents",
@@ -62,22 +61,7 @@ def upload_document(
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
-    file_path, filename = (
-        document_service.save_uploaded_file(file)
+    return document_service.upload_document(
+        db=db,
+        file=file
     )
-
-    document = Document(
-        filename=filename,
-        file_path=file_path,
-        status="processing"
-    )
-
-    db.add(document)
-    db.commit()
-    db.refresh(document)
-
-    return {
-        "message": "File uploaded successfully",
-        "document_id": document.id,
-        "filename": document.filename
-    }
