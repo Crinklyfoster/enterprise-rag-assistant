@@ -1,3 +1,6 @@
+import time
+
+from app.core.logger import logger
 from app.rag.embedder import OllamaEmbedder
 from app.rag.vector_store import ChromaVectorStore
 
@@ -14,6 +17,8 @@ class Retriever:
         document_id: str,
         top_k: int = 5
     ):
+        start = time.time()
+
         query_embedding = (
             self.embedder.generate_embedding(query)
         )
@@ -50,5 +55,13 @@ class Retriever:
                     "metadata": metadata
                 }
             )
+
+        latency = time.time() - start
+
+        logger.info(
+            f"Document={document_id} "
+            f"Retrieved={len(formatted_results)} "
+            f"Latency={latency:.3f}s"
+        )
 
         return formatted_results

@@ -1,4 +1,8 @@
+import time
+
 import ollama
+
+from app.core.logger import logger
 
 
 class Generator:
@@ -43,6 +47,8 @@ Current Question:
 Answer:
 """
 
+        start = time.time()
+
         response = ollama.chat(
             model=self.model_name,
             messages=[
@@ -51,6 +57,13 @@ Answer:
                     "content": prompt
                 }
             ]
+        )
+
+        generation_time = time.time() - start
+
+        logger.info(
+            f"Model={self.model_name} "
+            f"GenerationLatency={generation_time:.3f}s"
         )
 
         return response["message"]["content"]

@@ -1,3 +1,6 @@
+import time
+
+from app.core.logger import logger
 from app.services.pdf_processor import PDFProcessor
 from app.rag.chunker import DocumentChunker
 from app.rag.embedder import OllamaEmbedder
@@ -16,17 +19,53 @@ class IngestionService:
         document_id,
         file_path
     ):
+        start_time = time.time()
+
+        extract_start = time.time()
         text = PDFProcessor.extract_text(file_path)
 
+        logger.info(
+            f"Document {document_id}: "
+            f"extraction took "
+            f"{time.time() - extract_start:.2f}s"
+        )
+
+        chunk_start = time.time()
         chunks = self.chunker.chunk_text(text)
 
+        logger.info(
+            f"Document {document_id}: "
+            f"{len(chunks)} chunks created in "
+            f"{time.time() - chunk_start:.2f}s"
+        )
+
+        embedding_start = time.time()
         embedded_chunks = self.embedder.generate_embeddings(
             chunks
         )
 
+        logger.info(
+            f"Document {document_id}: "
+            f"{len(embedded_chunks)} embeddings generated in "
+            f"{time.time() - embedding_start:.2f}s"
+        )
+
+        storage_start = time.time()
         self.vector_store.add_chunks(
             document_id,
             embedded_chunks
+        )
+
+        logger.info(
+            f"Document {document_id}: "
+            f"stored in vector database in "
+            f"{time.time() - storage_start:.2f}s"
+        )
+
+        logger.info(
+            f"Document {document_id}: "
+            f"ingestion completed in "
+            f"{time.time() - start_time:.2f}s"
         )
 
         return len(chunks)

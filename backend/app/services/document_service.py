@@ -1,8 +1,11 @@
+import time
+
 from pathlib import Path
 from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
+from app.core.logger import logger
 from app.models.document import Document
 from app.schemas.document import DocumentCreate
 from app.services.ingestion_service import IngestionService
@@ -65,6 +68,8 @@ def upload_document(
     db,
     file
 ):
+    start = time.time()
+
     file_path, filename = save_uploaded_file(file)
 
     document = Document(
@@ -76,6 +81,11 @@ def upload_document(
     db.add(document)
     db.commit()
     db.refresh(document)
+
+    logger.info(
+        f"Upload completed in "
+        f"{time.time() - start:.2f}s"
+    )
 
     return {
         "document_id": str(document.id),
