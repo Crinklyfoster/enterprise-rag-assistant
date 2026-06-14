@@ -1,6 +1,5 @@
 from sqlalchemy import Column
 from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -10,9 +9,9 @@ import uuid
 from app.database.db import Base
 
 
-class Message(Base):
+class ChatSession(Base):
 
-    __tablename__ = "messages"
+    __tablename__ = "chat_sessions"
 
     id = Column(
         UUID(as_uuid=True),
@@ -20,19 +19,8 @@ class Message(Base):
         default=uuid.uuid4
     )
 
-    session_id = Column(
+    document_id = Column(
         UUID(as_uuid=True),
-        ForeignKey("chat_sessions.id"),
-        nullable=False
-    )
-
-    role = Column(
-        String,
-        nullable=False
-    )
-
-    content = Column(
-        String,
         nullable=False
     )
 

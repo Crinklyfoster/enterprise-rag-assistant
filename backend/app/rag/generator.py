@@ -12,27 +12,36 @@ class Generator:
     def generate(
         self,
         context: str,
-        question: str
+        question: str,
+        conversation_history: str = ""
     ):
         prompt = f"""
-        You are a helpful assistant.
+You are a helpful assistant.
 
-        Use the provided context to answer the question.
+Use the provided document context and conversation history
+to answer the user's question.
 
-        If the answer can be inferred from the context, provide a concise answer.
+If the conversation contains references such as:
+"it", "that", "this", "they"
+use the conversation history to determine what those
+references mean.
 
-        Only respond with:
-        "I could not find that information in the document."
-        when the context contains no relevant information at all.
+Only respond with:
+"I could not find that information in the document."
 
-        Context:
-        {context}
+when the document context contains no relevant information.
 
-        Question:
-        {question}
+Conversation History:
+{conversation_history}
 
-        Answer:
-        """
+Document Context:
+{context}
+
+Current Question:
+{question}
+
+Answer:
+"""
 
         response = ollama.chat(
             model=self.model_name,

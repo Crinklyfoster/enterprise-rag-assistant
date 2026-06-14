@@ -13,6 +13,7 @@ class RAGService:
         self,
         question: str,
         document_id,
+        conversation_history: str = "",
         top_k: int = settings.TOP_K
     ):
         retrieved_chunks = self.retriever.retrieve(
@@ -21,7 +22,6 @@ class RAGService:
             top_k=top_k
         )
 
-        # Don't call the LLM if nothing relevant was found
         if not retrieved_chunks:
             return {
                 "question": question,
@@ -39,7 +39,8 @@ class RAGService:
 
         answer = self.generator.generate(
             context=context,
-            question=question
+            question=question,
+            conversation_history=conversation_history
         )
 
         return {
