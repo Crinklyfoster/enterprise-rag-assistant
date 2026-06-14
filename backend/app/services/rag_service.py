@@ -1,3 +1,4 @@
+from app.core.config import settings
 from app.rag.retriever import Retriever
 from app.rag.generator import Generator
 
@@ -12,13 +13,24 @@ class RAGService:
         self,
         question: str,
         document_id,
-        top_k: int = 3
+        top_k: int = settings.TOP_K
     ):
         retrieved_chunks = self.retriever.retrieve(
             question,
             document_id=document_id,
             top_k=top_k
         )
+
+        # Don't call the LLM if nothing relevant was found
+        if not retrieved_chunks:
+            return {
+                "question": question,
+                "answer": (
+                    "I could not find that information "
+                    "in the document."
+                ),
+                "sources": []
+            }
 
         context = "\n\n".join(
             chunk["text"]

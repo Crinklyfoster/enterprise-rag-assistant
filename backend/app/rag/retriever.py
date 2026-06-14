@@ -29,12 +29,20 @@ class Retriever:
         metadatas = results["metadatas"][0]
 
         formatted_results = []
+        seen_chunks = set()
 
         for doc, distance, metadata in zip(
             documents,
             distances,
             metadatas
         ):
+            chunk_preview = doc[:150]
+
+            if chunk_preview in seen_chunks:
+                continue
+
+            seen_chunks.add(chunk_preview)
+
             formatted_results.append(
                 {
                     "text": doc,
