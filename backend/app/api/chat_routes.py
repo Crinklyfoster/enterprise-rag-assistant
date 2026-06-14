@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
+from app.rag.query_rewriter import QueryRewriter
 from app.schemas.chat import (
     ChatRequest,
     ChatResponse
@@ -20,6 +21,7 @@ router = APIRouter(
 )
 
 rag_service = RAGService()
+query_rewriter = QueryRewriter()
 
 
 @router.post(
@@ -47,8 +49,13 @@ def chat(
         for message in messages
     )
 
-    result = rag_service.answer_question(
+    rewritten_question = query_rewriter.rewrite(
         question=request.question,
+        conversation_history=conversation_history
+    )
+
+    result = rag_service.answer_question(
+        question=rewritten_question,
         document_id=request.document_id,
         conversation_history=conversation_history
     )
