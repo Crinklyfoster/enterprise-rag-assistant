@@ -1,5 +1,6 @@
 import time
 
+from app.core.config import settings
 from app.core.logger import logger
 from app.rag.embedder import OllamaEmbedder
 from app.rag.vector_store import ChromaVectorStore
@@ -15,7 +16,7 @@ class Retriever:
         self,
         query: str,
         document_id: str,
-        top_k: int = 5
+        top_k: int = settings.TOP_K
     ):
         start = time.time()
 

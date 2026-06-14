@@ -1,11 +1,13 @@
 import ollama
 
+from app.core.config import settings
+
 
 class OllamaEmbedder:
 
     def __init__(
         self,
-        model_name: str = "nomic-embed-text"
+        model_name: str = settings.EMBEDDING_MODEL
     ):
         self.model_name = model_name
 

@@ -2,6 +2,7 @@ import time
 
 import ollama
 
+from app.core.config import settings
 from app.core.logger import logger
 
 
@@ -9,7 +10,7 @@ class Generator:
 
     def __init__(
         self,
-        model_name: str = "qwen3:8b"
+        model_name: str = settings.CHAT_MODEL
     ):
         self.model_name = model_name
 
