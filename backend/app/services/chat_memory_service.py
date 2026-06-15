@@ -116,3 +116,19 @@ class ChatMemoryService:
         )
 
         return list(reversed(messages))
+
+    @staticmethod
+    def get_messages(
+        db,
+        session_id
+    ):
+        return (
+            db.query(Message)
+            .filter(
+                Message.session_id == session_id
+            )
+            .order_by(
+                Message.created_at.asc()
+            )
+            .all()
+        )

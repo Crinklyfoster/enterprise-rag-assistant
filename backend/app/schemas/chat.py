@@ -41,3 +41,13 @@ class ChatSessionResponse(BaseModel):
     document_id: UUID
     title: str
     created_at: datetime
+
+
+class MessageResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    session_id: UUID
+    role: str
+    content: str
+    created_at: datetime

@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
 import {
+  ChatMessage,
   ChatRequest,
   ChatResponse,
   ChatSession,
@@ -35,6 +36,16 @@ export async function sendMessage(
 
 export async function getSessions(): Promise<ChatSession[]> {
   const response = await api.get<ChatSession[]>("/chat/sessions");
+
+  return response.data;
+}
+
+export async function getMessages(
+  sessionId: string
+): Promise<ChatMessage[]> {
+  const response = await api.get<ChatMessage[]>(
+    `/chat/sessions/${sessionId}/messages`
+  );
 
   return response.data;
 }

@@ -12,6 +12,7 @@ import MessageList from "@/components/chat/MessageList";
 import SessionSidebar from "@/components/chat/SessionSidebar";
 import TypingIndicator from "@/components/chat/TypingIndicator";
 import { useChat } from "@/hooks/useChat";
+import { useMessages } from "@/hooks/useMessages";
 import { Message } from "@/types/message";
 
 export default function ChatPage() {
@@ -22,8 +23,23 @@ export default function ChatPage() {
   const documentId = searchParams.get("documentId");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const { data: history } = useMessages(sessionId);
   const chatMutation = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!history) return;
+
+    // History initializes the mutable message list used for optimistic sends.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMessages(
+      history.map((message) => ({
+        role: message.role,
+        content: message.content,
+        timestamp: new Date(message.created_at),
+      }))
+    );
+  }, [history]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({

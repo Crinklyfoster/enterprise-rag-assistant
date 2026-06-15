@@ -14,7 +14,8 @@ from app.schemas.chat import (
     ChatRequest,
     ChatResponse,
     ChatSessionRename,
-    ChatSessionResponse
+    ChatSessionResponse,
+    MessageResponse
 )
 from app.services.rag_service import RAGService
 
@@ -128,6 +129,20 @@ def get_session(
         )
 
     return session
+
+
+@router.get(
+    "/sessions/{session_id}/messages",
+    response_model=list[MessageResponse]
+)
+def get_messages(
+    session_id: UUID,
+    db: Session = Depends(get_db)
+):
+    return ChatMemoryService.get_messages(
+        db,
+        session_id
+    )
 
 
 @router.patch(
