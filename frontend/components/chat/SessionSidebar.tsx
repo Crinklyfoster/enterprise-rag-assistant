@@ -2,7 +2,7 @@
 
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import ThemeToggle from "@/components/layout/theme-toggle";
 import { useDeleteSession } from "@/hooks/useDeleteSession";
@@ -18,8 +18,9 @@ function formatCreatedAt(createdAt: string) {
 }
 
 export default function SessionSidebar() {
+  const router = useRouter();
   const { sessionId } = useParams<{
-    sessionId: string;
+    sessionId?: string;
   }>();
   const { data, isLoading } = useSessions();
   const renameMutation = useRenameSession();
@@ -30,7 +31,7 @@ export default function SessionSidebar() {
     currentTitle: string
   ) => {
     const title = window.prompt(
-      "Enter new title:",
+      "Enter session title",
       currentTitle
     )?.trim();
 
@@ -45,7 +46,13 @@ export default function SessionSidebar() {
   const handleDelete = (id: string) => {
     if (!window.confirm("Delete this session?")) return;
 
-    deleteMutation.mutate(id);
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        if (id === sessionId) {
+          router.push("/chat");
+        }
+      },
+    });
   };
 
   if (isLoading) {
@@ -67,9 +74,9 @@ export default function SessionSidebar() {
           return (
             <div
               key={session.id}
-              className={`rounded border border-gray-300 p-2 dark:border-gray-700 ${
+              className={`block rounded border border-gray-300 p-2 dark:border-gray-700 ${
                 isActive
-                  ? "bg-gray-100 font-semibold dark:bg-gray-800"
+                  ? "bg-muted font-semibold"
                   : ""
               }`}
             >

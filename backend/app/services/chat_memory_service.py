@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app.models.message import Message
 from app.models.chat_session import ChatSession
 
@@ -5,12 +7,22 @@ from app.models.chat_session import ChatSession
 class ChatMemoryService:
 
     @staticmethod
+    def generate_title(content):
+        title = " ".join(content.split())
+
+        if len(title) <= 60:
+            return title
+
+        return f"{title[:57].rstrip()}..."
+
+    @staticmethod
     def create_session(
         db,
         document_id
     ):
         session = ChatSession(
-            document_id=document_id
+            document_id=document_id,
+            title=f"Chat {datetime.now():%H:%M}"
         )
 
         db.add(session)
@@ -88,6 +100,14 @@ class ChatMemoryService:
         role,
         content
     ):
+        is_first_user_message = (
+            role == "user"
+            and not db.query(Message.id).filter(
+                Message.session_id == session_id,
+                Message.role == "user"
+            ).first()
+        )
+
         message = Message(
             session_id=session_id,
             role=role,
@@ -95,6 +115,18 @@ class ChatMemoryService:
         )
 
         db.add(message)
+
+        if is_first_user_message:
+            session = ChatMemoryService.get_session(
+                db,
+                session_id
+            )
+
+            if session is not None:
+                session.title = (
+                    ChatMemoryService.generate_title(content)
+                )
+
         db.commit()
 
     @staticmethod
