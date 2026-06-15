@@ -27,12 +27,12 @@ export default function DocumentCard({
 
   return (
     <div className="rounded-lg border border-gray-300 bg-white p-4 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           href={`/documents/${document.id}`}
-          className="block"
+          className="min-w-0 flex-1"
         >
-          <p className="font-medium">
+          <p className="break-words font-medium">
             {document.filename}
           </p>
 
@@ -54,7 +54,7 @@ export default function DocumentCard({
           </p>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
           <button
             onClick={async () => {
               try {
@@ -62,6 +62,10 @@ export default function DocumentCard({
                   await createSessionMutation.mutateAsync(
                     document.id
                   );
+
+                toast.success(
+                  "Chat session created"
+                );
 
                 router.push(
                   `/chat/${result.session_id}?documentId=${encodeURIComponent(

@@ -5,35 +5,13 @@ import DocumentUpload from "@/components/documents/DocumentUpload";
 import { useDocuments } from "@/hooks/useDocuments";
 
 export default function DocumentsPage() {
-  const { data, isLoading, isError } = useDocuments();
-
-  if (isLoading) {
-    return (
-      <main className="p-8">
-        <h1 className="text-3xl font-bold">
-          Documents
-        </h1>
-
-        <p className="mt-4">
-          Loading documents...
-        </p>
-      </main>
-    );
-  }
-
-  if (isError) {
-    return (
-      <main className="p-8">
-        <h1 className="text-3xl font-bold">
-          Documents
-        </h1>
-
-        <p className="mt-4 text-red-500">
-          Failed to load documents
-        </p>
-      </main>
-    );
-  }
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useDocuments();
 
   return (
     <main className="p-8">
@@ -43,7 +21,42 @@ export default function DocumentsPage() {
 
       <div className="mt-6">
         <DocumentUpload />
-        <DocumentList documents={data ?? []} />
+
+        {isLoading && (
+          <div
+            className="mt-6 space-y-4"
+            aria-label="Loading documents"
+            aria-busy="true"
+          >
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-28 animate-pulse rounded-lg bg-muted"
+              />
+            ))}
+          </div>
+        )}
+
+        {isError && (
+          <div className="py-12 text-center">
+            <p className="font-medium">
+              Failed to load documents.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => void refetch()}
+              disabled={isFetching}
+              className="mt-4 rounded border border-gray-300 px-4 py-2 hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700"
+            >
+              {isFetching ? "Retrying..." : "Retry"}
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !isError && (
+          <DocumentList documents={data ?? []} />
+        )}
       </div>
     </main>
   );

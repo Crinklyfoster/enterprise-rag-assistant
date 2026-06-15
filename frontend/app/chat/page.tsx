@@ -4,10 +4,10 @@ import SessionSidebar from "@/components/chat/SessionSidebar";
 
 export default function ChatHomePage() {
   return (
-    <div className="flex h-[calc(100dvh-57px)]">
+    <div className="flex h-[calc(100dvh-57px)] flex-col md:flex-row">
       <SessionSidebar />
 
-      <main className="flex flex-1 items-center justify-center p-8">
+      <main className="flex flex-1 items-center justify-center p-4 sm:p-8">
         <div className="max-w-md text-center">
           <h1 className="text-3xl font-bold">Chats</h1>
 

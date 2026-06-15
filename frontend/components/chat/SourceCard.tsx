@@ -26,8 +26,8 @@ export default function SourceCard({
           .trimEnd()}...`;
 
   return (
-    <div className="mt-2 rounded-lg border border-gray-300 bg-white p-3 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
-      <div className="flex justify-between gap-4">
+    <div className="mt-2 min-w-0 rounded-lg border border-gray-300 bg-white p-3 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+      <div className="flex flex-wrap justify-between gap-2">
         <span>Source {index + 1}</span>
 
         <span className="text-right">
@@ -35,7 +35,7 @@ export default function SourceCard({
         </span>
       </div>
 
-      <p className="mt-2 text-sm">{preview}</p>
+      <p className="mt-2 break-words text-sm">{preview}</p>
 
       {canExpand && (
         <button

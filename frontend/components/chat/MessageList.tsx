@@ -9,6 +9,20 @@ interface MessageListProps {
 export default function MessageList({
   messages,
 }: MessageListProps) {
+  if (messages.length === 0) {
+    return (
+      <div className="py-12 text-center">
+        <h2 className="text-2xl font-semibold">
+          Start a conversation
+        </h2>
+
+        <p className="mt-2 text-muted-foreground">
+          Ask a question about this document.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {messages.map((message, index) => (

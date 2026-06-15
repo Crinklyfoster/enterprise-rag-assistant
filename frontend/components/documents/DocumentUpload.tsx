@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import {
+  type ChangeEvent,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
 
 import { useUploadDocument } from "@/hooks/useUploadDocument";
@@ -8,8 +12,20 @@ import { useUploadDocument } from "@/hooks/useUploadDocument";
 export default function DocumentUpload() {
   const [selectedFile, setSelectedFile] =
     useState<File | null>(null);
+  const fileInputRef =
+    useRef<HTMLInputElement | null>(null);
 
   const uploadMutation = useUploadDocument();
+
+  const handleFileChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
 
   const handleUpload = () => {
     if (!selectedFile) return;
@@ -21,6 +37,10 @@ export default function DocumentUpload() {
         );
 
         setSelectedFile(null);
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       },
 
       onError: () => {
@@ -33,19 +53,26 @@ export default function DocumentUpload() {
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-300 bg-white p-4 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
-      <input
-        type="file"
-        accept=".pdf,.docx,.txt"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
+      <label className="block cursor-pointer rounded-lg border-2 border-dashed border-gray-300 p-8 text-center hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
+        Click to select a document
 
-          if (file) {
-            setSelectedFile(file);
-          }
-        }}
-      />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".pdf,.docx,.txt"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </label>
+
+      <p className="mt-2 text-sm">
+        {selectedFile
+          ? selectedFile.name
+          : "No file selected"}
+      </p>
 
       <button
+        type="button"
         onClick={handleUpload}
         disabled={
           !selectedFile ||

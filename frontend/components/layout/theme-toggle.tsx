@@ -1,9 +1,21 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useSyncExternalStore } from "react";
+
+const subscribe = () => () => {};
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <button

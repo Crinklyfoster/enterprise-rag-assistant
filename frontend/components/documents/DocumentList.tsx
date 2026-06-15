@@ -10,13 +10,13 @@ export default function DocumentList({
 }: DocumentListProps) {
   if (documents.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-300 bg-white p-8 text-center text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
-        <p className="text-lg font-medium">
+      <div className="py-12 text-center">
+        <h2 className="text-2xl font-semibold">
           No documents uploaded
-        </p>
+        </h2>
 
-        <p className="text-sm text-muted-foreground mt-2">
-          Upload a document to get started.
+        <p className="mt-2 text-muted-foreground">
+          Upload your first document to start using Enterprise RAG.
         </p>
       </div>
     );
