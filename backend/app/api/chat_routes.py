@@ -1,5 +1,10 @@
+from uuid import UUID
+
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import Response
+from starlette.status import HTTP_204_NO_CONTENT
 
 from sqlalchemy.orm import Session
 
@@ -7,7 +12,9 @@ from app.database.db import get_db
 from app.rag.query_rewriter import QueryRewriter
 from app.schemas.chat import (
     ChatRequest,
-    ChatResponse
+    ChatResponse,
+    ChatSessionRename,
+    ChatSessionResponse
 )
 from app.services.rag_service import RAGService
 
@@ -75,7 +82,7 @@ def chat(
 
 @router.post("/sessions")
 def create_session(
-    document_id: str,
+    document_id: UUID,
     db: Session = Depends(get_db)
 ):
     session = (
@@ -86,5 +93,84 @@ def create_session(
     )
 
     return {
-        "session_id": str(session.id)
+        "session_id": str(session.id),
+        "document_id": str(session.document_id)
     }
+
+
+@router.get(
+    "/sessions",
+    response_model=list[ChatSessionResponse]
+)
+def get_sessions(
+    db: Session = Depends(get_db)
+):
+    return ChatMemoryService.get_sessions(db)
+
+
+@router.get(
+    "/sessions/{session_id}",
+    response_model=ChatSessionResponse
+)
+def get_session(
+    session_id: UUID,
+    db: Session = Depends(get_db)
+):
+    session = ChatMemoryService.get_session(
+        db,
+        session_id
+    )
+
+    if session is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Chat session not found"
+        )
+
+    return session
+
+
+@router.patch(
+    "/sessions/{session_id}",
+    response_model=ChatSessionResponse
+)
+def rename_session(
+    session_id: UUID,
+    request: ChatSessionRename,
+    db: Session = Depends(get_db)
+):
+    session = ChatMemoryService.rename_session(
+        db,
+        session_id,
+        request.title
+    )
+
+    if session is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Chat session not found"
+        )
+
+    return session
+
+
+@router.delete(
+    "/sessions/{session_id}",
+    status_code=HTTP_204_NO_CONTENT
+)
+def delete_session(
+    session_id: UUID,
+    db: Session = Depends(get_db)
+):
+    deleted = ChatMemoryService.delete_session(
+        db,
+        session_id
+    )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Chat session not found"
+        )
+
+    return Response(status_code=HTTP_204_NO_CONTENT)

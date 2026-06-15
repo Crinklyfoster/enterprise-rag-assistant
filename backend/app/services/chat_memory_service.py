@@ -20,6 +20,68 @@ class ChatMemoryService:
         return session
 
     @staticmethod
+    def get_sessions(db):
+        return (
+            db.query(ChatSession)
+            .order_by(ChatSession.created_at.desc())
+            .all()
+        )
+
+    @staticmethod
+    def get_session(
+        db,
+        session_id
+    ):
+        return (
+            db.query(ChatSession)
+            .filter(ChatSession.id == session_id)
+            .first()
+        )
+
+    @staticmethod
+    def rename_session(
+        db,
+        session_id,
+        title
+    ):
+        session = ChatMemoryService.get_session(
+            db,
+            session_id
+        )
+
+        if session is None:
+            return None
+
+        session.title = title
+        db.commit()
+        db.refresh(session)
+
+        return session
+
+    @staticmethod
+    def delete_session(
+        db,
+        session_id
+    ):
+        session = ChatMemoryService.get_session(
+            db,
+            session_id
+        )
+
+        if session is None:
+            return False
+
+        (
+            db.query(Message)
+            .filter(Message.session_id == session_id)
+            .delete(synchronize_session=False)
+        )
+        db.delete(session)
+        db.commit()
+
+        return True
+
+    @staticmethod
     def save_message(
         db,
         session_id,

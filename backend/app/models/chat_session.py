@@ -24,6 +24,12 @@ class ChatSession(Base):
         nullable=False
     )
 
+    title = Column(
+        String,
+        default="New Chat",
+        nullable=False
+    )
+
     created_at = Column(
         DateTime,
         default=datetime.utcnow
