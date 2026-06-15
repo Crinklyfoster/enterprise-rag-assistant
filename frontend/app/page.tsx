@@ -1,36 +1,40 @@
-"use client";
-
-import { useHealthCheck } from "@/hooks/useHealthCheck";
+import Link from "next/link";
 
 export default function HomePage() {
-  const { data, isLoading, isError } = useHealthCheck();
-
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <div className="space-y-4 text-center">
-        <h1 className="text-4xl font-bold">
-          Enterprise RAG Assistant
-        </h1>
+    <main className="mx-auto max-w-4xl p-8">
+      <h1 className="text-4xl font-bold">
+        Enterprise RAG Assistant
+      </h1>
 
-        <p className="text-muted-foreground">
-          Frontend Sprint F1
-        </p>
+      <p className="mt-2 text-muted-foreground">
+        Upload documents and chat with them.
+      </p>
 
-        {isLoading && (
-          <p>Checking backend...</p>
-        )}
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <Link
+          href="/documents"
+          className="rounded-lg border border-gray-300 p-6 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+        >
+          <h2 className="text-xl font-semibold">
+            Documents
+          </h2>
 
-        {isError && (
-          <p className="text-red-500">
-            Backend Disconnected
+          <p className="mt-2 text-sm text-muted-foreground">
+            Upload, manage, and inspect documents.
           </p>
-        )}
+        </Link>
 
-        {data && (
-          <p className="text-green-600">
-            Backend Connected ({data.status})
+        <Link
+          href="/chat"
+          className="rounded-lg border border-gray-300 p-6 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+        >
+          <h2 className="text-xl font-semibold">Chats</h2>
+
+          <p className="mt-2 text-sm text-muted-foreground">
+            View and continue chat sessions.
           </p>
-        )}
+        </Link>
       </div>
     </main>
   );

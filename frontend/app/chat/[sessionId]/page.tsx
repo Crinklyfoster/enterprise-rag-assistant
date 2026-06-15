@@ -92,7 +92,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[calc(100dvh-57px)]">
       <SessionSidebar />
 
       <main className="mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col">
@@ -119,7 +119,7 @@ export default function ChatPage() {
           <div ref={bottomRef} />
         </div>
 
-        <div className="shrink-0 border-t bg-background p-4 sm:px-8">
+        <div className="shrink-0 border-t border-gray-300 bg-white p-4 dark:border-gray-700 dark:bg-gray-950 sm:px-8">
           <div className="flex items-end gap-3">
             <textarea
               value={input}
@@ -129,7 +129,7 @@ export default function ChatPage() {
               onKeyDown={handleKeyDown}
               placeholder="Ask a question..."
               rows={3}
-              className="min-h-20 flex-1 resize-none rounded border p-3"
+              className="min-h-20 flex-1 resize-none rounded border border-gray-300 bg-white p-3 text-black placeholder:text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-400"
             />
 
             <button
@@ -138,7 +138,7 @@ export default function ChatPage() {
               disabled={
                 chatMutation.isPending || !input.trim()
               }
-              className="rounded border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded border border-gray-300 bg-white px-4 py-2 text-black hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
             >
               Send
             </button>

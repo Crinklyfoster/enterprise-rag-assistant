@@ -26,7 +26,7 @@ export default function DocumentCard({
   const deleteMutation = useDeleteDocument();
 
   return (
-    <div className="border border-border rounded-lg p-4 bg-card">
+    <div className="rounded-lg border border-gray-300 bg-white p-4 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
       <div className="flex items-center justify-between">
         <Link
           href={`/documents/${document.id}`}
@@ -75,7 +75,7 @@ export default function DocumentCard({
               }
             }}
             disabled={createSessionMutation.isPending}
-            className="px-3 py-1 rounded border border-border"
+            className="rounded border border-gray-300 bg-white px-3 py-1 text-black hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
           >
             Start Chat
           </button>
@@ -97,7 +97,7 @@ export default function DocumentCard({
               })
             }
             disabled={deleteMutation.isPending}
-            className="px-3 py-1 rounded border border-border"
+            className="rounded border border-gray-300 bg-white px-3 py-1 text-black hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
           >
             Delete
           </button>

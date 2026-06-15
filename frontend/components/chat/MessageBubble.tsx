@@ -21,7 +21,7 @@ export default function MessageBubble({
         className={`max-w-[80%] rounded-lg px-4 py-3 ${
           isUser
             ? "bg-blue-500 text-white"
-            : "bg-muted"
+            : "bg-gray-100 text-black dark:bg-gray-800 dark:text-white"
         }`}
       >
         {message.content}

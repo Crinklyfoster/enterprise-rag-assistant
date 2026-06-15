@@ -10,7 +10,7 @@ export default function DocumentList({
 }: DocumentListProps) {
   if (documents.length === 0) {
     return (
-      <div className="border border-border rounded-lg p-8 text-center bg-card">
+      <div className="rounded-lg border border-gray-300 bg-white p-8 text-center text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
         <p className="text-lg font-medium">
           No documents uploaded
         </p>

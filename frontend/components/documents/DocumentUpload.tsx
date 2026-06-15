@@ -32,7 +32,7 @@ export default function DocumentUpload() {
   };
 
   return (
-    <div className="border border-border rounded-lg p-4 space-y-4 bg-card">
+    <div className="space-y-4 rounded-lg border border-gray-300 bg-white p-4 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
       <input
         type="file"
         accept=".pdf,.docx,.txt"
@@ -51,7 +51,7 @@ export default function DocumentUpload() {
           !selectedFile ||
           uploadMutation.isPending
         }
-        className="px-4 py-2 rounded bg-foreground text-background disabled:opacity-50"
+        className="rounded bg-gray-900 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50 dark:bg-gray-100 dark:text-black dark:hover:bg-white"
       >
         {uploadMutation.isPending
           ? "Uploading..."

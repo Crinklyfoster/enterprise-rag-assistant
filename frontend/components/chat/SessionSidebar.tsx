@@ -4,6 +4,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
+import ThemeToggle from "@/components/layout/theme-toggle";
 import { useDeleteSession } from "@/hooks/useDeleteSession";
 import { useRenameSession } from "@/hooks/useRenameSession";
 import { useSessions } from "@/hooks/useSessions";
@@ -52,7 +53,11 @@ export default function SessionSidebar() {
   }
 
   return (
-    <div className="w-72 border-r p-4">
+    <div className="w-72 border-r border-gray-300 bg-white p-4 text-black dark:border-gray-700 dark:bg-gray-950 dark:text-white">
+      <div className="mb-4">
+        <ThemeToggle />
+      </div>
+
       <h2 className="font-bold">Chats</h2>
 
       <div className="mt-4 space-y-2">
@@ -62,8 +67,10 @@ export default function SessionSidebar() {
           return (
             <div
               key={session.id}
-              className={`rounded border p-2 ${
-                isActive ? "bg-muted font-semibold" : ""
+              className={`rounded border border-gray-300 p-2 dark:border-gray-700 ${
+                isActive
+                  ? "bg-gray-100 font-semibold dark:bg-gray-800"
+                  : ""
               }`}
             >
               <div className="flex items-start gap-2">
@@ -91,7 +98,7 @@ export default function SessionSidebar() {
                   }
                   disabled={renameMutation.isPending}
                   aria-label={`Rename ${session.title}`}
-                  className="rounded p-1 hover:bg-background disabled:opacity-50"
+                  className="rounded p-1 hover:bg-gray-200 disabled:opacity-50 dark:hover:bg-gray-700"
                 >
                   <Pencil className="size-4" />
                 </button>
@@ -101,7 +108,7 @@ export default function SessionSidebar() {
                   onClick={() => handleDelete(session.id)}
                   disabled={deleteMutation.isPending}
                   aria-label={`Delete ${session.title}`}
-                  className="rounded p-1 hover:bg-background disabled:opacity-50"
+                  className="rounded p-1 hover:bg-gray-200 disabled:opacity-50 dark:hover:bg-gray-700"
                 >
                   <Trash2 className="size-4" />
                 </button>

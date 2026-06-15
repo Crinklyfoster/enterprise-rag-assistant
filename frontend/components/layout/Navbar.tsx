@@ -1,54 +1,20 @@
-"use client";
-
-import { useSyncExternalStore } from "react";
-import { useTheme } from "next-themes";
-
-const themeOptions = [
-  { value: "light", label: "☀️ Light" },
-  { value: "dark", label: "🌙 Dark" },
-  { value: "system", label: "💻 System" },
-] as const;
-
-const emptySubscribe = () => () => {};
+import Link from "next/link";
 
 export default function Navbar() {
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
-  const { theme, setTheme } = useTheme();
-
   return (
-    <nav className="flex items-center justify-between border-b border-border bg-card px-8 py-4">
-      <span className="font-semibold">
-        Enterprise RAG Assistant
-      </span>
+    <nav className="border-b border-gray-300 px-6 py-4 dark:border-gray-700">
+      <div className="flex gap-6">
+        <Link className="hover:underline" href="/">
+          Home
+        </Link>
 
-      <div
-        className="flex gap-1 rounded-lg border border-border p-1"
-        aria-label="Theme"
-      >
-        {themeOptions.map((option) => {
-          const isActive =
-            mounted && theme === option.value;
+        <Link className="hover:underline" href="/documents">
+          Documents
+        </Link>
 
-          return (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setTheme(option.value)}
-              aria-pressed={isActive}
-              className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-                isActive
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
-              }`}
-            >
-              {option.label}
-            </button>
-          );
-        })}
+        <Link className="hover:underline" href="/chat">
+          Chats
+        </Link>
       </div>
     </nav>
   );

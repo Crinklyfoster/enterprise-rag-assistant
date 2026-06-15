@@ -26,7 +26,7 @@ export default function SourceCard({
           .trimEnd()}...`;
 
   return (
-    <div className="mt-2 rounded-lg border p-3">
+    <div className="mt-2 rounded-lg border border-gray-300 bg-white p-3 text-black dark:border-gray-700 dark:bg-gray-900 dark:text-white">
       <div className="flex justify-between gap-4">
         <span>Source {index + 1}</span>
 
@@ -41,7 +41,7 @@ export default function SourceCard({
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
-          className="mt-2 text-sm underline"
+          className="mt-2 rounded text-sm underline hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:text-blue-400"
           aria-expanded={expanded}
         >
           {expanded ? "Show Less" : "Show More"}
