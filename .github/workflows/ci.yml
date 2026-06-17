@@ -82,3 +82,22 @@ jobs:
         run: |
           pip install semgrep
           semgrep scan --config=auto
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Backend Image
+        run: |
+          docker build \
+            -f docker/backend.Dockerfile \
+            -t enterprise-rag-backend:test .
+
+      - name: Build Frontend Image
+        run: |
+          docker build \
+            -f docker/frontend.Dockerfile \
+            -t enterprise-rag-frontend:test .          
