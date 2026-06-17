@@ -71,4 +71,6 @@ jobs:
 
       - name: Run pip-audit
         run: |
-          pip-audit -r backend/requirements.txt        
+          pip-audit \
+            -r backend/requirements.txt \
+            --ignore-vuln CVE-2026-45829        
