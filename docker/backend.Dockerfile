@@ -4,15 +4,13 @@ WORKDIR /app
 
 ENV PYTHONPATH=/app
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt .
-
-RUN pip install --no-cache-dir --upgrade pip
 
 RUN pip install --no-cache-dir -r requirements.txt
 
