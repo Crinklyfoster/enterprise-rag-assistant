@@ -7,6 +7,7 @@ from app.core.config import settings
 from app.core.logger import get_logger
 from app.api.document_routes import router as document_router
 from app.api.chat_routes import router as chat_router
+from app.services.health_service import HealthService
 
 logger = get_logger(__name__)
 
@@ -44,6 +45,4 @@ def root():
 
 @app.get("/health")
 def health():
-    return {
-        "status": "ok"
-    }
+    return HealthService.get_health_status()

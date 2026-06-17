@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     CHUNK_SIZE: int = 1000
     CHUNK_OVERLAP: int = 200
     OLLAMA_HOST: str = "http://host.docker.internal:11434"
+    CHROMA_DB_PATH: str = "./chroma_db"
     EMBEDDING_MODEL: str = "nomic-embed-text"
     CHAT_MODEL: str = "qwen3:8b"
     BACKEND_CORS_ORIGINS: list[str] = Field(default_factory=lambda: [

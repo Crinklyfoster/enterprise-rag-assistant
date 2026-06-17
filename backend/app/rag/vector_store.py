@@ -1,12 +1,13 @@
 import chromadb
 
+from app.core.config import settings
 
 class ChromaVectorStore:
 
     def __init__(
-        self,
-        path: str = "./chroma_db"
-    ):
+    self,
+    path: str = "./chroma_db"
+):
         self.client = chromadb.PersistentClient(
             path=path
         )
