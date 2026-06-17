@@ -73,4 +73,7 @@ jobs:
         run: |
           pip-audit \
             -r backend/requirements.txt \
-            --ignore-vuln CVE-2026-45829        
+            --ignore-vuln CVE-2026-45829
+            
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
