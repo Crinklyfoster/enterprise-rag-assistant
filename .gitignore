@@ -15,6 +15,10 @@ venv/
 backend/.env
 !.env.example
 
+frontend/.env.local
+frontend/.env.*
+!frontend/.env.example
+
 # Uploads & Media
 uploads/
 backend/uploads/*
