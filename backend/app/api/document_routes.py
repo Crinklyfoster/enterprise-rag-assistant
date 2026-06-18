@@ -24,7 +24,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[DocumentResponse])
+@router.get("", response_model=list[DocumentResponse])
 def get_documents(
     db: Session = Depends(get_db)
 ):
@@ -51,7 +51,7 @@ def get_document(
     return document
 
 
-@router.post("/", response_model=DocumentResponse)
+@router.post("", response_model=DocumentResponse)
 def create_document(
     document: DocumentCreate,
     db: Session = Depends(get_db)

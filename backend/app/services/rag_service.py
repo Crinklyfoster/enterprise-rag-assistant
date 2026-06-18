@@ -1,7 +1,7 @@
 from app.core.config import settings
 from app.rag.retriever import Retriever
 from app.rag.generator import Generator
-
+from app.core.metrics import CHAT_REQUESTS
 
 class RAGService:
 
@@ -16,11 +16,14 @@ class RAGService:
         conversation_history: str = "",
         top_k: int = settings.TOP_K
     ):
+        CHAT_REQUESTS.inc()
+
         retrieved_chunks = self.retriever.retrieve(
             question,
             document_id=document_id,
             top_k=top_k
         )
+
 
         if not retrieved_chunks:
             return {

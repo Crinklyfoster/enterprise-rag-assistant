@@ -2,12 +2,15 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
+from prometheus_client import generate_latest
 
 from app.core.config import settings
 from app.core.logger import get_logger
 from app.api.document_routes import router as document_router
 from app.api.chat_routes import router as chat_router
 from app.services.health_service import HealthService
+
 
 logger = get_logger(__name__)
 
@@ -46,3 +49,10 @@ def root():
 @app.get("/health")
 def health():
     return HealthService.get_health_status()
+
+@app.get("/metrics")
+def metrics():
+    return Response(
+        content=generate_latest(),
+        media_type="text/plain"
+    )

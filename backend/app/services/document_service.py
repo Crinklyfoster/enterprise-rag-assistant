@@ -10,8 +10,10 @@ from app.models.document import Document
 from app.schemas.document import DocumentCreate
 from app.services.ingestion_service import IngestionService
 from app.rag.vector_store import ChromaVectorStore
+from app.core.metrics import DOCUMENT_UPLOADS
 
 logger = get_logger(__name__)
+
 
 ingestion_service = IngestionService()
 vector_store = ChromaVectorStore()
@@ -84,10 +86,13 @@ def upload_document(
     db.commit()
     db.refresh(document)
 
+    DOCUMENT_UPLOADS.inc()
+
     logger.info(
         f"Upload completed in "
         f"{time.time() - start:.2f}s"
     )
+
 
     return {
         "document_id": str(document.id),
