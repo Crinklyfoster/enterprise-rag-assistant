@@ -1,16 +1,15 @@
 import time
-
 from pathlib import Path
 from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
 from app.core.logger import get_logger
+from app.core.metrics import DOCUMENT_UPLOADS
 from app.models.document import Document
+from app.rag.vector_store import ChromaVectorStore
 from app.schemas.document import DocumentCreate
 from app.services.ingestion_service import IngestionService
-from app.rag.vector_store import ChromaVectorStore
-from app.core.metrics import DOCUMENT_UPLOADS
 
 logger = get_logger(__name__)
 
@@ -19,13 +18,9 @@ ingestion_service = IngestionService()
 vector_store = ChromaVectorStore()
 
 
-def create_document(
-    db: Session,
-    document: DocumentCreate
-):
+def create_document(db: Session, document: DocumentCreate):
     new_document = Document(
-        filename=document.filename,
-        file_path=document.file_path
+        filename=document.filename, file_path=document.file_path
     )
 
     db.add(new_document)
@@ -39,26 +34,18 @@ def get_documents(db: Session):
     return db.query(Document).all()
 
 
-def get_document_by_id(
-    db: Session,
-    document_id
-):
-    return (
-        db.query(Document)
-        .filter(Document.id == document_id)
-        .first()
-    )
+def get_document_by_id(db: Session, document_id):
+    return db.query(Document).filter(Document.id == document_id).first()
 
 
 def save_uploaded_file(file):
     upload_dir = Path("uploads")
 
-    upload_dir.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+    upload_dir.mkdir(parents=True, exist_ok=True)
 
-    unique_filename = f"{uuid4()}_{file.filename}"
+    safe_filename = Path(file.filename).name
+
+    unique_filename = f"{uuid4()}_{safe_filename}"
 
     file_path = upload_dir / unique_filename
 
@@ -68,18 +55,13 @@ def save_uploaded_file(file):
     return str(file_path), unique_filename
 
 
-def upload_document(
-    db,
-    file
-):
+def upload_document(db, file):
     start = time.time()
 
     file_path, filename = save_uploaded_file(file)
 
     document = Document(
-        filename=filename,
-        file_path=file_path,
-        status="processing"
+        filename=filename, file_path=file_path, status="processing"
     )
 
     db.add(document)
@@ -88,45 +70,33 @@ def upload_document(
 
     DOCUMENT_UPLOADS.inc()
 
-    logger.info(
-        f"Upload completed in "
-        f"{time.time() - start:.2f}s"
-    )
-
+    logger.info(f"Upload completed in {time.time() - start:.2f}s")
 
     return {
         "document_id": str(document.id),
         "filename": document.filename,
         "status": document.status,
-        "file_path": document.file_path
+        "file_path": document.file_path,
     }
 
-def delete_document(
-        db: Session,
-        document_id
-    ):
-        document = (
-            db.query(Document)
-            .filter(Document.id == document_id)
-            .first()
-        )
 
-        if not document:
-            return False
+def delete_document(db: Session, document_id):
+    document = db.query(Document).filter(Document.id == document_id).first()
 
-        # Delete vectors from Chroma
-        vector_store.delete_document(
-            document_id
-        )
+    if not document:
+        return False
 
-        # Delete uploaded PDF
-        file_path = Path(document.file_path)
+    # Delete vectors from Chroma
+    vector_store.delete_document(document_id)
 
-        if file_path.exists():
-            file_path.unlink()
+    # Delete uploaded PDF
+    file_path = Path(document.file_path)
 
-        # Delete database record
-        db.delete(document)
-        db.commit()
+    if file_path.exists():
+        file_path.unlink()
 
-        return True
+    # Delete database record
+    db.delete(document)
+    db.commit()
+
+    return True

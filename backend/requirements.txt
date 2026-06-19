@@ -57,6 +57,7 @@ opentelemetry-semantic-conventions==0.63b1
 orjson==3.11.9
 overrides==7.7.0
 packaging==26.2
+prometheus_client==0.25.0
 propcache==0.5.2
 protobuf==6.33.6
 psycopg2-binary==2.9.12
@@ -78,6 +79,7 @@ requests-oauthlib==2.0.0
 requests-toolbelt==1.0.0
 rich==15.0.0
 rpds-py==2026.5.1
+ruff==0.15.18
 shellingham==1.5.4
 six==1.17.0
 SQLAlchemy==2.0.50
@@ -98,4 +100,3 @@ websockets==16.0
 xxhash==3.7.0
 yarl==1.24.2
 zstandard==0.25.0
-prometheus-client==0.25.0

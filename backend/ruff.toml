@@ -1,0 +1,16 @@
+line-length = 79
+target-version = "py312"
+
+[lint]
+select = [
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "I",  # import sorting
+]
+
+ignore = [
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"

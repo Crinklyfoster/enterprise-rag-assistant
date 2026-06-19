@@ -1,11 +1,10 @@
 from datetime import datetime
 
-from app.models.message import Message
 from app.models.chat_session import ChatSession
+from app.models.message import Message
 
 
 class ChatMemoryService:
-
     @staticmethod
     def generate_title(content):
         title = " ".join(content.split())
@@ -16,13 +15,9 @@ class ChatMemoryService:
         return f"{title[:57].rstrip()}..."
 
     @staticmethod
-    def create_session(
-        db,
-        document_id
-    ):
+    def create_session(db, document_id):
         session = ChatSession(
-            document_id=document_id,
-            title=f"Chat {datetime.now():%H:%M}"
+            document_id=document_id, title=f"Chat {datetime.now():%H:%M}"
         )
 
         db.add(session)
@@ -34,32 +29,18 @@ class ChatMemoryService:
     @staticmethod
     def get_sessions(db):
         return (
-            db.query(ChatSession)
-            .order_by(ChatSession.created_at.desc())
-            .all()
+            db.query(ChatSession).order_by(ChatSession.created_at.desc()).all()
         )
 
     @staticmethod
-    def get_session(
-        db,
-        session_id
-    ):
+    def get_session(db, session_id):
         return (
-            db.query(ChatSession)
-            .filter(ChatSession.id == session_id)
-            .first()
+            db.query(ChatSession).filter(ChatSession.id == session_id).first()
         )
 
     @staticmethod
-    def rename_session(
-        db,
-        session_id,
-        title
-    ):
-        session = ChatMemoryService.get_session(
-            db,
-            session_id
-        )
+    def rename_session(db, session_id, title):
+        session = ChatMemoryService.get_session(db, session_id)
 
         if session is None:
             return None
@@ -71,14 +52,8 @@ class ChatMemoryService:
         return session
 
     @staticmethod
-    def delete_session(
-        db,
-        session_id
-    ):
-        session = ChatMemoryService.get_session(
-            db,
-            session_id
-        )
+    def delete_session(db, session_id):
+        session = ChatMemoryService.get_session(db, session_id)
 
         if session is None:
             return False
@@ -94,55 +69,32 @@ class ChatMemoryService:
         return True
 
     @staticmethod
-    def save_message(
-        db,
-        session_id,
-        role,
-        content
-    ):
+    def save_message(db, session_id, role, content):
         is_first_user_message = (
             role == "user"
-            and not db.query(Message.id).filter(
-                Message.session_id == session_id,
-                Message.role == "user"
-            ).first()
+            and not db.query(Message.id)
+            .filter(Message.session_id == session_id, Message.role == "user")
+            .first()
         )
 
-        message = Message(
-            session_id=session_id,
-            role=role,
-            content=content
-        )
+        message = Message(session_id=session_id, role=role, content=content)
 
         db.add(message)
 
         if is_first_user_message:
-            session = ChatMemoryService.get_session(
-                db,
-                session_id
-            )
+            session = ChatMemoryService.get_session(db, session_id)
 
             if session is not None:
-                session.title = (
-                    ChatMemoryService.generate_title(content)
-                )
+                session.title = ChatMemoryService.generate_title(content)
 
         db.commit()
 
     @staticmethod
-    def get_recent_messages(
-        db,
-        session_id,
-        limit=6
-    ):
+    def get_recent_messages(db, session_id, limit=6):
         messages = (
             db.query(Message)
-            .filter(
-                Message.session_id == session_id
-            )
-            .order_by(
-                Message.created_at.desc()
-            )
+            .filter(Message.session_id == session_id)
+            .order_by(Message.created_at.desc())
             .limit(limit)
             .all()
         )
@@ -150,17 +102,10 @@ class ChatMemoryService:
         return list(reversed(messages))
 
     @staticmethod
-    def get_messages(
-        db,
-        session_id
-    ):
+    def get_messages(db, session_id):
         return (
             db.query(Message)
-            .filter(
-                Message.session_id == session_id
-            )
-            .order_by(
-                Message.created_at.asc()
-            )
+            .filter(Message.session_id == session_id)
+            .order_by(Message.created_at.asc())
             .all()
         )

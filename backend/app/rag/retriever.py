@@ -9,27 +9,19 @@ logger = get_logger(__name__)
 
 
 class Retriever:
-
     def __init__(self):
         self.embedder = OllamaEmbedder()
         self.vector_store = ChromaVectorStore()
 
     def retrieve(
-        self,
-        query: str,
-        document_id: str,
-        top_k: int = settings.TOP_K
+        self, query: str, document_id: str, top_k: int = settings.TOP_K
     ):
         start = time.time()
 
-        query_embedding = (
-            self.embedder.generate_embedding(query)
-        )
+        query_embedding = self.embedder.generate_embedding(query)
 
         results = self.vector_store.search(
-            query_embedding,
-            top_k,
-            document_id=document_id
+            query_embedding, top_k, document_id=document_id
         )
 
         documents = results["documents"][0]
@@ -39,11 +31,7 @@ class Retriever:
         formatted_results = []
         seen_chunks = set()
 
-        for doc, distance, metadata in zip(
-            documents,
-            distances,
-            metadatas
-        ):
+        for doc, distance, metadata in zip(documents, distances, metadatas):
             chunk_preview = doc[:150]
 
             if chunk_preview in seen_chunks:
@@ -52,11 +40,7 @@ class Retriever:
             seen_chunks.add(chunk_preview)
 
             formatted_results.append(
-                {
-                    "text": doc,
-                    "distance": distance,
-                    "metadata": metadata
-                }
+                {"text": doc, "distance": distance, "metadata": metadata}
             )
 
         latency = time.time() - start

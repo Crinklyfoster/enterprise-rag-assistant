@@ -9,21 +9,12 @@ logger = get_logger(__name__)
 
 
 class Generator:
-
-    def __init__(
-        self,
-        model_name: str = settings.CHAT_MODEL
-    ):
+    def __init__(self, model_name: str = settings.CHAT_MODEL):
         self.model_name = model_name
-        self.client = ollama.Client(
-            host=settings.OLLAMA_HOST
-        )
+        self.client = ollama.Client(host=settings.OLLAMA_HOST)
 
     def generate(
-        self,
-        context: str,
-        question: str,
-        conversation_history: str = ""
+        self, context: str, question: str, conversation_history: str = ""
     ):
         prompt = f"""
 You are a helpful assistant.
@@ -57,19 +48,13 @@ Answer:
 
         response = self.client.chat(
             model=self.model_name,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
+            messages=[{"role": "user", "content": prompt}],
         )
 
         generation_time = time.time() - start
 
         logger.info(
-            f"Model={self.model_name} "
-            f"GenerationLatency={generation_time:.3f}s"
+            f"Model={self.model_name} GenerationLatency={generation_time:.3f}s"
         )
 
         return response["message"]["content"]

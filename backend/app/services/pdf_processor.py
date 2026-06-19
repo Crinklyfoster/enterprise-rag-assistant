@@ -2,7 +2,6 @@ import fitz
 
 
 class PDFProcessor:
-
     @staticmethod
     def extract_text(file_path: str) -> str:
         """

@@ -1,26 +1,21 @@
 import time
 
 from app.core.logger import get_logger
-from app.services.pdf_processor import PDFProcessor
 from app.rag.chunker import DocumentChunker
 from app.rag.embedder import OllamaEmbedder
 from app.rag.vector_store import ChromaVectorStore
+from app.services.pdf_processor import PDFProcessor
 
 logger = get_logger(__name__)
 
 
 class IngestionService:
-
     def __init__(self):
         self.chunker = DocumentChunker()
         self.embedder = OllamaEmbedder()
         self.vector_store = ChromaVectorStore()
 
-    def process_document(
-        self,
-        document_id,
-        file_path
-    ):
+    def process_document(self, document_id, file_path):
         start_time = time.time()
 
         extract_start = time.time()
@@ -42,9 +37,7 @@ class IngestionService:
         )
 
         embedding_start = time.time()
-        embedded_chunks = self.embedder.generate_embeddings(
-            chunks
-        )
+        embedded_chunks = self.embedder.generate_embeddings(chunks)
 
         logger.info(
             f"Document {document_id}: "
@@ -53,10 +46,7 @@ class IngestionService:
         )
 
         storage_start = time.time()
-        self.vector_store.add_chunks(
-            document_id,
-            embedded_chunks
-        )
+        self.vector_store.add_chunks(document_id, embedded_chunks)
 
         logger.info(
             f"Document {document_id}: "

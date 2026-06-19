@@ -1,17 +1,15 @@
-from sqlalchemy import text
-import requests
 import chromadb
+import requests
+from sqlalchemy import text
 
-from app.database.db import engine
 from app.core.config import settings
 from app.core.logger import get_logger
-
+from app.database.db import engine
 
 logger = get_logger(__name__)
 
 
 class HealthService:
-
     @staticmethod
     def check_postgres():
         try:
@@ -28,8 +26,7 @@ class HealthService:
     def check_ollama():
         try:
             response = requests.get(
-                f"{settings.OLLAMA_HOST}/api/tags",
-                timeout=5
+                f"{settings.OLLAMA_HOST}/api/tags", timeout=5
             )
 
             if response.status_code == 200:
@@ -44,9 +41,7 @@ class HealthService:
     @staticmethod
     def check_chromadb():
         try:
-            client = chromadb.PersistentClient(
-                path=settings.CHROMA_DB_PATH
-            )
+            client = chromadb.PersistentClient(path=settings.CHROMA_DB_PATH)
 
             client.heartbeat()
 
@@ -76,5 +71,5 @@ class HealthService:
             "status": overall,
             "postgres": postgres,
             "ollama": ollama,
-            "chromadb": chromadb_status
+            "chromadb": chromadb_status,
         }

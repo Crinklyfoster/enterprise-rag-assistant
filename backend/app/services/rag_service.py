@@ -1,10 +1,10 @@
 from app.core.config import settings
-from app.rag.retriever import Retriever
-from app.rag.generator import Generator
 from app.core.metrics import CHAT_REQUESTS
+from app.rag.generator import Generator
+from app.rag.retriever import Retriever
+
 
 class RAGService:
-
     def __init__(self):
         self.retriever = Retriever()
         self.generator = Generator()
@@ -14,36 +14,29 @@ class RAGService:
         question: str,
         document_id,
         conversation_history: str = "",
-        top_k: int = settings.TOP_K
+        top_k: int = settings.TOP_K,
     ):
         CHAT_REQUESTS.inc()
 
         retrieved_chunks = self.retriever.retrieve(
-            question,
-            document_id=document_id,
-            top_k=top_k
+            question, document_id=document_id, top_k=top_k
         )
-
 
         if not retrieved_chunks:
             return {
                 "question": question,
                 "answer": (
-                    "I could not find that information "
-                    "in the document."
+                    "I could not find that information in the document."
                 ),
-                "sources": []
+                "sources": [],
             }
 
-        context = "\n\n".join(
-            chunk["text"]
-            for chunk in retrieved_chunks
-        )
+        context = "\n\n".join(chunk["text"] for chunk in retrieved_chunks)
 
         answer = self.generator.generate(
             context=context,
             question=question,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
         )
 
         return {
@@ -54,8 +47,8 @@ class RAGService:
                     "chunk_id": chunk["metadata"]["chunk_id"],
                     "document_id": chunk["metadata"]["document_id"],
                     "score": chunk["distance"],
-                    "preview": chunk["text"][:200]
+                    "preview": chunk["text"][:200],
                 }
                 for chunk in retrieved_chunks
-            ]
+            ],
         }

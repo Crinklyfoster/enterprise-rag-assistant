@@ -9,27 +9,15 @@ logger = get_logger(__name__)
 
 
 class QueryRewriter:
-
     def __init__(self):
-        self.client = ollama.Client(
-            host=settings.OLLAMA_HOST
-        )
+        self.client = ollama.Client(host=settings.OLLAMA_HOST)
 
-    def rewrite(
-        self,
-        question: str,
-        conversation_history: str
-    ):
+    def rewrite(self, question: str, conversation_history: str):
         has_reference = re.search(
-            r"\b(it|they|this|that|these|those)\b",
-            question,
-            re.IGNORECASE
+            r"\b(it|they|this|that|these|those)\b", question, re.IGNORECASE
         )
 
-        if (
-            not conversation_history.strip()
-            or not has_reference
-        ):
+        if not conversation_history.strip() or not has_reference:
             return question
 
         prompt = f"""
@@ -55,22 +43,11 @@ Latest Question:
 
         response = self.client.chat(
             model=settings.CHAT_MODEL,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
+            messages=[{"role": "user", "content": prompt}],
         )
 
-        rewritten = (
-            response["message"]["content"]
-            .strip()
-        )
+        rewritten = response["message"]["content"].strip()
 
-        logger.info(
-            f"Original='{question}' "
-            f"Rewritten='{rewritten}'"
-        )
+        logger.info(f"Original='{question}' Rewritten='{rewritten}'")
 
         return rewritten
