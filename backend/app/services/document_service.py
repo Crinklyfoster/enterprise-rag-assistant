@@ -43,9 +43,7 @@ def save_uploaded_file(file):
 
     upload_dir.mkdir(parents=True, exist_ok=True)
 
-    safe_filename = Path(file.filename).name
-
-    unique_filename = f"{uuid4()}_{safe_filename}"
+    unique_filename = f"{uuid4()}.pdf"
 
     file_path = upload_dir / unique_filename
 
