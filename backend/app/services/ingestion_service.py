@@ -15,7 +15,12 @@ class IngestionService:
         self.embedder = OllamaEmbedder()
         self.vector_store = ChromaVectorStore()
 
-    def process_document(self, document_id, file_path):
+    def process_document(
+        self,
+        document_id,
+        file_path,
+    ):
+
         start_time = time.time()
 
         extract_start = time.time()
@@ -46,7 +51,11 @@ class IngestionService:
         )
 
         storage_start = time.time()
-        self.vector_store.add_chunks(document_id, embedded_chunks)
+        self.vector_store.add_chunks(
+            document_id,
+            embedded_chunks,
+        )
+
 
         logger.info(
             f"Document {document_id}: "

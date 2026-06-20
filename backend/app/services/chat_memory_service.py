@@ -1,10 +1,8 @@
 from datetime import datetime
-from pathlib import Path
 
 from sqlalchemy.orm import Session
 
 from app.models.chat_session import ChatSession
-from app.models.document import Document
 from app.models.message import Message
 from app.rag.vector_store import ChromaVectorStore
 
@@ -66,28 +64,6 @@ class ChatMemoryService:
         if session is None:
             return False
 
-        # Step 1: fetch all documents in the session
-        documents = (
-            db.query(Document)
-            .filter(Document.session_id == session_id)
-            .all()
-        )
-
-        # Step 2: delete physical files for each document
-        for doc in documents:
-            file_path = Path(doc.file_path)
-            try:
-                if file_path.exists():
-                    file_path.unlink()
-            except OSError:
-                # Keep deletion resilient if the file is already missing/locked
-                pass
-
-        # Step 3: delete Chroma vectors for each document
-        for doc in documents:
-            ChatMemoryService.vector_store.delete_document(doc.id)
-
-        # Step 4: delete session (messages/documents rows cascade via ORM)
         db.delete(session)
         db.commit()
 

@@ -7,14 +7,17 @@ logger = get_logger(__name__)
 
 
 def process_document_background(document_id, file_path):
+
     db = SessionLocal()
 
     try:
         ingestion_service = IngestionService()
 
         ingestion_service.process_document(
-            document_id=document_id, file_path=file_path
+            document_id=document_id,
+            file_path=file_path,
         )
+
 
         document = (
             db.query(Document).filter(Document.id == document_id).first()

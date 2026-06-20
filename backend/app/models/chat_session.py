@@ -23,10 +23,7 @@ class ChatSession(Base):
         cascade="all, delete-orphan",
     )
 
-    documents = relationship(
-        "Document",
-        back_populates="session",
-        cascade="all, delete-orphan",
-    )
+
+
 
 

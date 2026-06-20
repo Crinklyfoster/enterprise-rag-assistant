@@ -45,9 +45,9 @@ def chat(request: ChatRequest, db: Session = Depends(get_db)):
 
     result = rag_service.answer_question(
         question=rewritten_question,
-        document_id=request.document_id,
         conversation_history=conversation_history,
     )
+
 
     ChatMemoryService.save_message(
         db=db,
@@ -60,12 +60,11 @@ def chat(request: ChatRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/sessions")
-def create_session(document_id: UUID, db: Session = Depends(get_db)):
-    session = ChatMemoryService.create_session(db, document_id)
+def create_session(db: Session = Depends(get_db)):
+    session = ChatMemoryService.create_session(db)
 
     return {
         "session_id": str(session.id),
-        "document_id": str(document_id),
     }
 
 

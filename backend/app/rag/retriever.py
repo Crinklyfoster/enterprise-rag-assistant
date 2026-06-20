@@ -14,15 +14,19 @@ class Retriever:
         self.vector_store = ChromaVectorStore()
 
     def retrieve(
-        self, query: str, document_id: str, top_k: int = settings.TOP_K
+        self,
+        query: str,
+        top_k: int = settings.TOP_K,
     ):
         start = time.time()
+
 
         query_embedding = self.embedder.generate_embedding(query)
 
         results = self.vector_store.search(
-            query_embedding, top_k, document_id=document_id
+            query_embedding, top_k, 
         )
+
 
         documents = results["documents"][0]
         distances = results["distances"][0]
@@ -46,9 +50,9 @@ class Retriever:
         latency = time.time() - start
 
         logger.info(
-            f"Document={document_id} "
             f"Retrieved={len(formatted_results)} "
             f"Latency={latency:.3f}s"
         )
+
 
         return formatted_results

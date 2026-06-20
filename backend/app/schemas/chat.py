@@ -6,7 +6,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 class ChatRequest(BaseModel):
     session_id: str
-    document_id: str
     question: str
 
 
@@ -38,7 +37,6 @@ class ChatSessionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
-    document_id: UUID
     title: str
     created_at: datetime
 

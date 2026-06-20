@@ -12,15 +12,16 @@ class RAGService:
     def answer_question(
         self,
         question: str,
-        document_id,
         conversation_history: str = "",
         top_k: int = settings.TOP_K,
     ):
         CHAT_REQUESTS.inc()
 
         retrieved_chunks = self.retriever.retrieve(
-            question, document_id=document_id, top_k=top_k
+            question,
+            top_k=top_k,
         )
+
 
         if not retrieved_chunks:
             return {
@@ -46,6 +47,7 @@ class RAGService:
                 {
                     "chunk_id": chunk["metadata"]["chunk_id"],
                     "document_id": chunk["metadata"]["document_id"],
+                    
                     "score": chunk["distance"],
                     "preview": chunk["text"][:200],
                 }
